@@ -49,20 +49,28 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 35%;
-    height: 100%;
-    margin-top: 50px;
+    width: 40%;
+    height: 60%;
+    margin-top: 100px;
 }
 
 @media (max-width: 767px){
     .logo{
-        width: 40%;
+        width: 60%;
+        height: 80%;
     }
 }
 
 @media (max-width: 480px){
     .logo{
-        width: 45%;
+        width: 65%;
+    }
+}
+
+@media (max-width: 320px){
+    .logo{
+        width: 75%;
+        height: 55%;
     }
 }
 
@@ -97,8 +105,8 @@
 
 @media (max-width: 767px){
     .selectButton {
-        width: 75%;
-        height: 25%;
+        width: 65%;
+        height: 30%;
     }
 }
 
