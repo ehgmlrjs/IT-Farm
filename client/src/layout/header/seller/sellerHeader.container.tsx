@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useRecoilState } from "recoil";
 import { loginState } from "@/src/store/states";
 import throttle from "lodash/throttle";
+import axios from "axios";
 
 export default function SellerHeaderPage():JSX.Element {
     /* 내렸을때 true 올릴때 false */
@@ -36,14 +37,30 @@ export default function SellerHeaderPage():JSX.Element {
       [beforeScrollY]
     );
 
-    const onClickLogout = ()=> {
+    const onClickLogout = async ()=> {
+        const response = await axios.post('http://localhost:8000/users/logout/', {
+          id : localStorage.getItem('id')
+        })
+
+        if (response.status === 201){
+          console.log("로그아웃 성공")
+        }
+
         localStorage.setItem('loginState', 'false')
         setLocalLogin(false)
+        localStorage.removeItem('accesstoken');
+        localStorage.removeItem('nickname');
+        localStorage.removeItem('usertype');
+        localStorage.removeItem('id');
         router.push('/')
     }
 
     const onClickLogo = () => {
       router.push('/seller')
+    }
+
+    const onClickMy = () => {
+      router.push(`/seller/my/${localStorage.getItem('id')}`)
     }
 
 
@@ -52,6 +69,7 @@ export default function SellerHeaderPage():JSX.Element {
             visible = {visible}
             onClickLogout = {onClickLogout}
             onClickLogo = {onClickLogo}
+            onClickMy = {onClickMy}
          />
     )
 }

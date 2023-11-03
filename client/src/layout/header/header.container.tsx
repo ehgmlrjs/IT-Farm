@@ -4,6 +4,7 @@ import { useRecoilState } from "recoil";
 import { loginState } from "@/src/store/states";
 import throttle from "lodash/throttle";
 import HeaderPageUI from "./header.presenter";
+import axios from "axios";
 
 export default function HeaderPage():JSX.Element {
     /* 내렸을때 true 올릴때 false */
@@ -48,10 +49,27 @@ export default function HeaderPage():JSX.Element {
       router.push('./register')
     }
 
-    const onClickLogout = () => {
-      localStorage.setItem('loginState', 'false')
-      setLocalLogin(false)
-      alert('로그아웃 하였습니다.')
+    const onClickLogout = async () => {
+      try{
+        const response = await axios.post('http://localhost:8000/users/logout/', {
+          id : localStorage.getItem('id')
+        })
+
+        if (response.status === 201){
+          console.log("로그아웃 성공")
+        }
+
+        localStorage.setItem('loginState', 'false')
+        setLocalLogin(false)
+        localStorage.removeItem('accesstoken');
+        localStorage.removeItem('nickname');
+        localStorage.removeItem('usertype');
+        localStorage.removeItem('id');
+        alert('로그아웃 하였습니다.')
+      }catch(error){
+        console.log('error', error)
+      }
+      
     }
 
     return(
