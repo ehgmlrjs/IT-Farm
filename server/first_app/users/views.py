@@ -77,11 +77,11 @@ class LoginView(APIView):
         else:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
-    def delete(self, request):
-        response = Response({
-            'message': 'Logout success'
-        }, status=status.HTTP_202_ACCEPTED)
-        response.delete_cookie('access')
+
+class LogoutView(APIView):
+    def post(self, request):
         user_id = request.data.get('id')
         RefreshToken.objects.filter(user_id=user_id).delete()
-        return response
+        return Response({
+            'message': 'Logout success'
+        }, status=status.HTTP_200_OK)

@@ -42,7 +42,7 @@ export default function SellerHeaderPage():JSX.Element {
           id : localStorage.getItem('id')
         })
 
-        if (response.status === 201){
+        if (response.status === 200){
           console.log("로그아웃 성공")
         }
 
