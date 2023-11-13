@@ -20,7 +20,7 @@ class CartUpdateView(APIView):
         try:
             pk = request.data.get('cart_id')
             cart = get_object_or_404(Cart, pk=pk)
-            product_id = cart.product_id
+            product_id = request.data.get('product_id')
             product = get_object_or_404(Product, pk=product_id)
             if request.data.get('type'):
                 if product.count <= cart.count:
@@ -35,8 +35,7 @@ class CartUpdateView(APIView):
             return Response({'message':f'실패: {e}'}, status=status.HTTP_400_BAD_REQUEST)
     
 class CartDeleteView(APIView):
-    def post(self, request):
-        cart_id = request.data.get('cart_id')
+    def delete(self, request, cart_id):
         cart = get_object_or_404(Cart, id=cart_id)
         try:
             cart.delete()
@@ -45,8 +44,8 @@ class CartDeleteView(APIView):
             return Response({'message':f'삭제 실패: {e}'}, status=status.HTTP_400_BAD_REQUEST)
 
 class CartReadView(APIView):
-    def post(self, request):
-        user_id = request.data.get('user_id')
+    def get(self, request):
+        user_id = request.member.get('id')
         cart = Cart.objects.filter(user_id=user_id)
         serializer = CartReadSerializer(cart,many=True)
         return Response(serializer.data)

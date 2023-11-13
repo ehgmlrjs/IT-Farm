@@ -28,8 +28,7 @@ class ProductUpdateView(APIView):
         return Response({"message": "실패", "error": errors}, status=status.HTTP_400_BAD_REQUEST)
     
 class ProductDeleteView(APIView):
-    def post(self, request):
-        product_id = request.data.get('product_id')
+    def delete(self, request, product_id):
         product = get_object_or_404(Product, id=product_id)
         try:
             product.delete()
@@ -38,14 +37,13 @@ class ProductDeleteView(APIView):
             return Response({'message':f'삭제 실패: {e}'}, status=status.HTTP_400_REQUEST)
 
 class ProductReadView(APIView):
-    def post(self, request):
+    def get(self, request):
         products = Product.objects.all()
         serializer = ProductSerializer(products,many=True)
         return Response(serializer.data)
     
 class ProductSearchView(APIView):
-    def post(self, request):
-        product_name = request.data.get('name')
+    def get(self, request, product_name):
         if product_name:
             products = Product.objects.filter(
                 Q(name__icontains=product_name) |
@@ -56,8 +54,7 @@ class ProductSearchView(APIView):
         return Response({'message':'잘못된 검색어'}, status=status.HTTP_400_BAD_REQUEST)
     
 class ProductDetailReadView(APIView):
-    def post(self, request):
-        product_id = request.data.get('product_id')
+    def get(self, request, product_id):
         product = Product.objects.get(id=product_id)
         serializer = ProductSerializer(product)
         return Response(serializer.data)

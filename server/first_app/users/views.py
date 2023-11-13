@@ -40,7 +40,7 @@ class LoginView(APIView):
 
 
 class LogoutView(APIView):
-    def post(self, request):
+    def delete(self, request):
         response = Response({
                 'message': 'Logout success'
             }, status=status.HTTP_200_OK)

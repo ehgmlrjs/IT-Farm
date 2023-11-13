@@ -18,7 +18,7 @@ class PestCreateView(APIView):
 
 class PestUpdateView(APIView):
     def post(self, request):
-        pk = request.data['pest_id']
+        pk = request.data.get('pest_id')
         pest = get_object_or_404(Pest, pk=pk)
         serializer = PestSerializer(instance=pest, data=request.data)
         if serializer.is_valid():
@@ -28,8 +28,7 @@ class PestUpdateView(APIView):
         return Response({"message": "실패", "error": errors}, status=status.HTTP_400_BAD_REQUEST)
     
 class PestDeleteView(APIView):
-    def post(self, request):
-        pest_id = request.data.get('pest_id')
+    def delete(self, request, pest_id):
         pest = get_object_or_404(Pest, id=pest_id)
         try:
             pest.delete()
@@ -38,14 +37,13 @@ class PestDeleteView(APIView):
             return Response({'message':f'삭제 실패: {e}'},status=status.HTTP_400_BAD_REQUEST)
 
 class PestReadView(APIView):
-    def post(self, request):
-        farm_id = request.data.get('farm_id')
+    def get(self, request, farm_id):
         pest = Pest.objects.filter(farm_id=farm_id)
         serializer = PestSerializer(pest,many=True)
         return Response(serializer.data)
     
 class PestSolutionView(APIView):
-    def post(self, request):
+    def put(self, request):
         try:
             pk = request.data.get('pest_id')
             pest = get_object_or_404(Pest, pk=pk)

@@ -11,7 +11,7 @@ from django.db.models import Sum
 
 class FarmProductCreateView(APIView):
     def post(self, request):
-        user_id = request.data.get('user_id')
+        user_id = request.member.get('id')
         farm_id = request.data.get('farm_id')
         unit_type = request.data.get('unit_type')
         crop = float(request.data.get('crop'))
@@ -26,7 +26,7 @@ class FarmProductCreateView(APIView):
         return Response({"message": "실패", "error": errors}, status=status.HTTP_400_BAD_REQUEST)
 
 class FarmProductUpdateView(APIView):
-    def post(self, request):
+    def put(self, request):
         try:
             pk = request.data.get('farm_product_id')
             farm_product = get_object_or_404(Farm_products, pk=pk)
@@ -37,8 +37,7 @@ class FarmProductUpdateView(APIView):
             return Response({'message':f'실패: {e}'}, status=status.HTTP_400_BAD_REQUEST)
     
 class FarmProductDeleteView(APIView):
-    def post(self, request):
-        farm_product_id = request.data.get('farm_product_id')
+    def delete(self, request, farm_product_id):
         farm_product = get_object_or_404(Farm_products, id=farm_product_id)
         try:
             farm_product.delete()
@@ -48,8 +47,8 @@ class FarmProductDeleteView(APIView):
 
 class FarmProductReadView(APIView):
     def post(self, request):
-        farm_id = request.data.get('farm_id')
-        center = request.data.get('center')
+        farm_id = request.GET.get('farm_id',None)
+        center = request.GET.get('center',None)
         if center:
             farm_product = Farm_products.objects.filter(center=center,state='등록대기')
         else:
@@ -59,8 +58,7 @@ class FarmProductReadView(APIView):
     
 
 class CenterProductReadView(APIView):
-    def post(self, request):
-        center = request.data.get('center')
+    def get(self, request, center):
         if center == '전국':
             result = Farm_products.objects.filter(state='등록완료').values('eco','kind').annotate(total_crop=Sum('crop'))
         else :

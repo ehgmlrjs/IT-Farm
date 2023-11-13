@@ -27,7 +27,7 @@ class FarmCreateView(APIView):
 
 class FarmUpdateView(APIView):
     def post(self, request):
-        pk = request.data.get('farm_id')
+        pk = request.member.get('id')
         farm = get_object_or_404(Farms, pk=pk)
         user_id = request.data.get('user_id')
         address = request.data.get('address')
@@ -41,8 +41,7 @@ class FarmUpdateView(APIView):
         return Response({"message": "실패", "error": errors}, status=status.HTTP_400_BAD_REQUEST)
     
 class FarmDeleteView(APIView):
-    def post(self, request):
-        farm_id = request.data.get('farm_id')
+    def post(self, request, farm_id):
         farm = get_object_or_404(Farms, id=farm_id)
         try:
             farm.delete()
@@ -51,9 +50,8 @@ class FarmDeleteView(APIView):
             return Response({'message':f'삭제 실패: {e}'}, status=status.HTTP_400_REQUEST)
         
 class FarmReadView(APIView):
-    def post(self, request):
-        user_id = request.data.get('user_id')
-        center = request.data.get('center')
+    def get(self, request, center=None):
+        user_id = request.member.get('id')
         if center == '전국':
             farms = Farms.objects.all()
         elif center:

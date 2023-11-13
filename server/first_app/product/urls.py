@@ -4,8 +4,8 @@ from .views import ProductCreateView, ProductUpdateView, ProductDeleteView, Prod
 urlpatterns = [
     path('create/', ProductCreateView.as_view()),
     path('update/', ProductUpdateView.as_view()),
-    path('delete/', ProductDeleteView.as_view()),
+    path('delete/<int:product_id>/', ProductDeleteView.as_view()),
     path('read/', ProductReadView.as_view()),
-    path('search/', ProductSearchView.as_view()),
-    path('detail/', ProductDetailReadView.as_view()),
+    path('search/<str:product_name>/', ProductSearchView.as_view()),
+    path('detail/<int:product_id>/', ProductDetailReadView.as_view()),
 ]

@@ -48,9 +48,7 @@ export default function SellerHeaderPage():JSX.Element {
 
     const onClickLogout = async ()=> {
         try{
-          const response = await axios.post('http://localhost:8000/users/logout/', {
-            user_id : localStorage.getItem('id')
-          })
+          const response = await axios.delete('http://localhost:8000/users/logout/')
 
         if (response.status === 200){
           console.log("로그아웃 성공")

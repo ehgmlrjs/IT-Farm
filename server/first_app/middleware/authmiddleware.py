@@ -28,7 +28,7 @@ class Authmiddleware:
             pk = payload.get('user_id')
             user = get_object_or_404(User, pk=pk)
             serializer = UserSerializer(instance=user)
-            request.user = serializer.data
+            request.member = serializer.data
             response = self.get_response(request)
             return response
 
